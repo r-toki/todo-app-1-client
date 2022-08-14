@@ -2,6 +2,8 @@ import { format, utcToZonedTime } from 'date-fns-tz';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
 
+const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BASE_URL : 'http://127.0.0.1:8080';
+
 type Task = {
   id: number;
   description: string;
@@ -14,12 +16,12 @@ const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const fetchTasks = async () => {
-    const res = await fetch('http://127.0.0.1:8080/tasks').then((res) => res.json());
+    const res = await fetch(BASE_URL + '/tasks').then((res) => res.json());
     setTasks(res);
   };
 
   const createTask = async ({ description }: { description: string }) => {
-    await fetch('http://127.0.0.1:8080/tasks', {
+    await fetch(BASE_URL + '/tasks', {
       method: 'POST',
       body: JSON.stringify({ description }),
       headers: { 'content-type': 'application/json' },
@@ -28,7 +30,7 @@ const useTasks = () => {
   };
 
   const destroyTask = async (task_id: number) => {
-    await fetch(`http://127.0.0.1:8080/tasks/${task_id}`, {
+    await fetch(BASE_URL + `/tasks/${task_id}`, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
     });
